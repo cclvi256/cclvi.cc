@@ -8,6 +8,8 @@
     "declaration": true,
     // Code runs in the DOM
     "lib": ["es2022", "dom", "dom.iterable"],
+    // "module": "esnext",
+    // "moduleResolution": "bundler",
     // Type Imports
     "verbatimModuleSyntax": true,
     // Others
