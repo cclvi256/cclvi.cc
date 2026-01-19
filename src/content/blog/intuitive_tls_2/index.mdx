@@ -1,0 +1,49 @@
+---
+title: "Intuitive TLS (III): The 2-RTT Dance: TLS 1.2"
+description: A brief introduction of TLS to the ones without crypto or security knowledge.
+publishDate: 2026-01-13T00:00:00Z
+tags: 
+- Crypto
+- Network
+- Cybersecurity
+---
+
+## TLS 1.2 in Chronological Perspective
+
+TLS 1.2 needs 2 RTT (Round Trip Time) to conduct handshaking. From the chronological perspective, I will tell you what happens during the two RTTs.
+
+### First RTT, Client -> Server
+
+This stage is usually known as **Client Hello**, the client transmits the **highest supported TLS version** (in this part, it is TLS 1.2), **a 32-bit random number** ($R_c$) and all supported **cipher suites**. Crucially, this exchange occurs in unencrypted plaintext.
+
+So what is a cipher suite? Put simply, cipher suite is a group of cryptographic algorithms, governing **key exchange, authentication, bulk encryption, and message digesting** (usually using hash or MAC). For example, `TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384` refers to:
+
+- ECDHE: key exchange
+- RSA: authentication
+- AES 256 GCM: 
+- SHA384: Hashing (Message Digest)
+
+### First RTT, Server -> Client
+
+In this part, the server responds to the client with some messages, and exactly in a single flight:
+
+1. **Server Hello**: A confirmation for the finally selected TLS version and cipher suite which was provided by the client, besides, the server will also transmit the server random ($R_s).
+
+2. **Certificate**: The server provides the digital certificate to the client, containing the server's private key. But note that at this stage, the client is **unable** to verify whether the server possesses the corresponding private key.
+
+3. **Server Key Exchange**: Contains the selected elliptic curve parameters and the ephemeral server public key ($bG$, $b$ is a generated integer, and also the server private key, and $G$ is a basepoint on the elliptic curve). And finally, the server signs $\text{Hash}(R_c, R_s, bG)$ with its certificate private key to authenticate the server identity.
+
+4. **Server Hello Done**: Signals the end of the server's transmission for this RTT.
+
+### Second RTT, Client -> Server
+
+Like the server in first RTT, this part, the client will also send some messages in a single flight:
+
+1. **Client Key Exchange**: The client transmits its client public key ($aG$, $a$ is also a generated integer, and the client private key). Until now, both the server and the client now derive the **pre-master key**: the server has its private key $b$, and the client provided $aG$, and for the client, it has $a$ and $bG$, so they can generate the master key: $abG$ or $baG$ ($abG = baG$, this relies on the commutative property, like what in real number multiplication). 
+2. **Change Cipher Spec**: A notification that all subsequent messages from the client will be encrypted.
+3. **Finished**: An encrypted hash of all previous handshake messages. This ensures the earlier plaintext exchange has not been **tampered with**.
+
+### Second RTT, Server -> Client
+
+1. **Change Cipher Spec**: The server similarily signals that all subsequent messages from the server will be encrypted.
+2. **Finished**: The server sends its own encrypted hash. Upon successful decryption, the client confirms that both parties share an **identical master key**.
