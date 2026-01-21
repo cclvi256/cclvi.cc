@@ -14,12 +14,12 @@
           "name": "Icy Desert",
           "intro": "",
           "link": "https://icyds.net/",
-          "avatar": "https://avatars.githubusercontent.com/u/150048186?v=4"
+          "avatar": "https://icyds.net/icon.png"
         },
         {
           "name": "Cherrling",
           "intro": "克拉克三定律之⼀：任何足够先进的技术和魔法是不可区分的",
-          "link": "https://cherr.cc",
+          "link": "https://cherr.cc/",
           "avatar": "https://avatars.githubusercontent.com/u/37233261?v=4"
         },
         {
@@ -37,8 +37,8 @@
         {
           "name": "BBBNicolas",
           "intro": "Combats avec tes défenseurs !",
-          "link":"https://dingbangliu.codeberg.page",
-          "avatar":"https://github.com/vierundsechzig/vierundsechzig/blob/main/avatar.png"
+          "link":"https://dingbangliu.codeberg.page/",
+          "avatar":"https://github.com/vierundsechzig/vierundsechzig/blob/main/avatar.png?raw=true"
         }
       ]
     },
