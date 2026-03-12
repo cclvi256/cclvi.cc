@@ -29,7 +29,7 @@ In this part, the server responds to the client with some messages, and exactly 
 
 1. **Server Hello**: A confirmation for the finally selected TLS version and cipher suite which was provided by the client, besides, the server will also transmit the server random ($R_s).
 
-2. **Certificate**: The server provides the digital certificate to the client, containing the server's private key. But note that at this stage, the client is **unable** to verify whether the server possesses the corresponding private key.
+2. **Certificate**: The server provides the digital certificate to the client, containing the server's public key. But note that at this stage, the client is **unable** to verify whether the server possesses the corresponding private key.
 
 3. **Server Key Exchange**: Contains the selected elliptic curve parameters and the ephemeral server public key ($bG$, $b$ is a generated integer, and also the server private key, and $G$ is a basepoint on the elliptic curve). And finally, the server signs $\text{Hash}(R_c, R_s, bG)$ with its certificate private key to authenticate the server identity.
 
@@ -37,7 +37,7 @@ In this part, the server responds to the client with some messages, and exactly 
 
 ### Second RTT, Client -> Server
 
-Like the server in first RTT, this part, the client will also send some messages in a single flight:
+Before the second RTT, the client will first verify the server's certificate, and if the verification is successful, the client will proceed to generate the master key and send some messages to the server. Like the server in first RTT, this part, the client will also send some messages in a single flight:
 
 1. **Client Key Exchange**: The client transmits its client public key ($aG$, $a$ is also a generated integer, and the client private key). Until now, both the server and the client now derive the **pre-master key**: the server has its private key $b$, and the client provided $aG$, and for the client, it has $a$ and $bG$, so they can generate the master key: $abG$ or $baG$ ($abG = baG$, this relies on the commutative property, like what in real number multiplication). 
 2. **Change Cipher Spec**: A notification that all subsequent messages from the client will be encrypted.
@@ -47,3 +47,7 @@ Like the server in first RTT, this part, the client will also send some messages
 
 1. **Change Cipher Spec**: The server similarily signals that all subsequent messages from the server will be encrypted.
 2. **Finished**: The server sends its own encrypted hash. Upon successful decryption, the client confirms that both parties share an **identical master key**.
+
+## Summary
+
+As mentioned in the previous article, TLS 1.2 uses ECDHE (Elliptic Curve Diffie-Hellman Ephemeral) for key exchange, which keeps the **confidenciality** of the session. With the two **Finished** segments, both the client and the server can verify that the previous plaintext messages have not been tampered with, and also confirm that they share the same master key, which is crucial for **integrity**. And the certificate and the signature in the first RTT ensure the **authenticity** of the server.
