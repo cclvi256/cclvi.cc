@@ -79,10 +79,10 @@ export const theme: ThemeUserConfig = {
     credits: true,
     /** Optional details about the social media accounts for this site. */
     social: [
-      { icon: 'github', label: 'GitHub', link: 'https://github.com/cclvi256'},
-      { icon: 'telegram', label: 'Telegram', link: 'https://t.me/cclvi256' },
-      { icon: 'email', label: 'Email', link: 'mailto:i@cclvi.cc' },
-      { icon: 'rss', label: 'RSS', link: '/rss.xml' }
+      { icon: 'github', label: 'GitHub', href: 'https://github.com/cclvi256'},
+      { icon: 'telegram', label: 'Telegram', href: 'https://t.me/cclvi256' },
+      { icon: 'email', label: 'Email', href: 'mailto:i@cclvi.cc' },
+      { icon: 'rss', label: 'RSS', href: '/rss.xml' }
     ]
   },
 
